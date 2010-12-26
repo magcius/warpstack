@@ -80,6 +80,28 @@ public class WarpStackListener extends PluginListener {
             return true;
         }
 
+        if (split[0].equalsIgnoreCase("/stphere") && player.canUseCommand("/tphere") && player.canUseCommand("/stphere")) {
+            if (split.length < 2) {
+                player.sendMessage(Colors.Rose + "Correct usage is: /stphere [player]");
+                return true;
+            }
+
+            Player other = etc.getServer().matchPlayer(split[1]);
+
+            if (other != null) {
+                if (player.getName().equalsIgnoreCase(other.getName())) {
+                    player.sendMessage(Colors.Rose + "Wow look at that! You teleported yourself to yourself!");
+                    return true;
+                }
+
+                if (locations.pushLocation(other, player.getLocation()))
+                    updateWarpState(other);
+
+            } else
+                player.sendMessage(Colors.Rose + "Can't find user " + split[1] + ".");
+            return true;
+        }
+
         if (split[0].equalsIgnoreCase("/sback") && player.canUseCommand("/sback")) {
             if (locations.popLocation(player))
                 updateWarpState(player);
