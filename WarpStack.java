@@ -3,7 +3,7 @@ import java.util.LinkedHashMap;
 
 public class WarpStack extends Plugin {
     public String name = "WarpStack";
-    public String version = "0.7";
+    public String version = "0.8";
 
     public static int stack_limit;
 
