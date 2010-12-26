@@ -1,20 +1,30 @@
 
+import java.util.LinkedHashMap;
+
 public class WarpStack extends Plugin {
     public String name = "WarpStack";
-    public String version = "0.5";
+    public String version = "0.6";
 
     private WarpStackListener listener;
 
     public void enable() {
-        etc.getInstance().addCommand("/swarp", "[warpname] - push a warp to your warp stack");
-        etc.getInstance().addCommand("/sback", "go back");
-        etc.getInstance().addCommand("/smove", "+N or -N - move within your warp stack");
+        LinkedHashMap<String, String> commands = etc.getInstance().getCommands();
+        commands.put("/swarp",  commands.get("/warp")  + " [Stack]");
+        commands.put("/stp",    commands.get("/tp")    + " [Stack]");
+        commands.put("/shome",  commands.get("/home")  + " [Stack]");
+        commands.put("/sspawn", commands.get("/spawn") + " [Stack]");
+        commands.put("/sback",  "go back in your warp stack [Stack]");
+        commands.put("/smove",  "move within your warp stack [Stack]");
     }
 
     public void disable() {
-        etc.getInstance().removeCommand("/swarp");
-        etc.getInstance().removeCommand("/sback");
-        etc.getInstance().removeCommand("/smove");
+        etc e = etc.getInstance();
+        e.removeCommand("/swarp");
+        e.removeCommand("/stp");
+        e.removeCommand("/shome");
+        e.removeCommand("/sspawn");
+        e.removeCommand("/sback");
+        e.removeCommand("/smove");
     }
 
     public void initialize() {
