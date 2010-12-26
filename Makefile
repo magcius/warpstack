@@ -1,13 +1,24 @@
 
-.PHONY: clean all
+NAME := WarpStack
 
-all: WarpStack.jar
+JAR := build/$(NAME).jar
 
-WarpStack.class: WarpStack.java
-	javac -cp third-party/Server.jar:third-party/hMod.jar -d build WarpStack.java
+SOURCES := $(wildcard *.java)
+CLASSES := $(SOURCES:.java=.class)
+BUILD_CLASSES := $(foreach i,$(CLASSES),build/$(i))
 
-WarpStack.jar: WarpStack.class
-	jar cf build/WarpStack.jar -C build WarpStack.class -C build 'WarpStack$$Listener.class' WarpStack.java
+.PHONY: clean love all
+
+all: $(JAR)
 
 clean:
-	rm build/*.class build/WarpStack.jar
+	rm $(JAR) $(BUILD_CLASSES)
+
+love:
+	@echo "Don't know how to make love"
+
+$(BUILD_CLASSES): $(SOURCES)
+	javac -cp third-party/Server.jar:third-party/hMod.jar:. -d build $(SOURCES)
+
+$(JAR): $(BUILD_CLASSES)
+	jar cf $(JAR) $(foreach i,$(CLASSES),-C build $(i)) $(SOURCES)
