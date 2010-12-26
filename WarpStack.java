@@ -16,6 +16,7 @@ public class WarpStack extends Plugin {
         commands.put("/stphere", commands.get("/tphere") + " [Stack]");
         commands.put("/shome", commands.get("/home") + " [Stack]");
         commands.put("/sspawn", commands.get("/spawn") + " [Stack]");
+        commands.put("/swlist", " - View your warp stack [Stack]");
         commands.put("/sback", " - Go back in your warp stack [Stack]");
         commands.put("/smove", " - Move within your warp stack [Stack]");
     }
@@ -24,8 +25,10 @@ public class WarpStack extends Plugin {
         etc e = etc.getInstance();
         e.removeCommand("/swarp");
         e.removeCommand("/stp");
+        e.removeCommand("/stphere");
         e.removeCommand("/shome");
         e.removeCommand("/sspawn");
+        e.removeCommand("/swlist");
         e.removeCommand("/sback");
         e.removeCommand("/smove");
     }
