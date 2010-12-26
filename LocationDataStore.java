@@ -1,5 +1,6 @@
 
 import java.util.HashMap;
+import java.util.ArrayList;
 
 public class LocationDataStore {
 
@@ -14,12 +15,12 @@ public class LocationDataStore {
         return stack;
     }
 
-    public boolean pushLocation(Player player, Location loc) {
+    public boolean pushLocation(Player player, Location loc, String name) {
         LocationDataStack stack = get(player);
         if (!stack.canAddSlot())
             return false;
         stack.setLocation(player.getLocation());
-        stack.addSlot(loc);
+        stack.addSlot(loc, name);
         return true;
     }
 
@@ -31,6 +32,22 @@ public class LocationDataStore {
         LocationDataStack stack = get(player);
         stack.setLocation(player.getLocation());
         stack.rotate(by);
+    }
+
+    public int getSize(Player player) {
+        return get(player).size;
+    }
+
+    public int getActive(Player player) {
+        return get(player).pointer;
+    }
+
+    public String getName(Player player) {
+        return get(player).getName();
+    }
+
+    public String getName(Player player, int index) {
+        return get(player).getName(index);
     }
 
     public Location getLocation(Player player) {

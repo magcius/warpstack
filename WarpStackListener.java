@@ -1,5 +1,6 @@
 
 import java.util.HashMap;
+import java.util.ArrayList;
 
 public class WarpStackListener extends PluginListener {
 
@@ -8,6 +9,55 @@ public class WarpStackListener extends PluginListener {
     private void updateWarpState(Player player) {
         player.teleportTo(locations.getLocation(player));
         player.sendMessage(Colors.Rose + "Woosh!");
+    }
+
+    private void noMoreSlots(Player player) {
+        player.sendMessage(Colors.Rose + "You are at your maximum for warp slots.");
+    }
+
+    public boolean pushWarpSpawn(Player player) {
+        if (locations.pushLocation(player, etc.getServer().getSpawnLocation(), "spawn")) {
+            updateWarpState(player);
+            return true;
+        } else {
+            noMoreSlots(player);
+            return false;
+        }
+    }
+
+    public boolean pushWarp(Player player, Warp warp) {
+        if (locations.pushLocation(player, warp.Location, warp.Name)) {
+            updateWarpState(player);
+            return true;
+        } else {
+            noMoreSlots(player);
+            return false;
+        }
+    }
+
+    public boolean pushWarp(Player player, Player warp) {
+        if (locations.pushLocation(player, warp.getLocation(), "tp:" + warp.getName())) {
+            updateWarpState(player);
+            return true;
+        } else {
+            noMoreSlots(player);
+            return false;
+        }
+    }
+
+    public boolean popWarp(Player player) {
+        if (locations.popLocation(player)) {
+            updateWarpState(player);
+            return true;
+        } else {
+            player.sendMessage(Colors.Rose + "No previous warps.");
+            return false;
+        }
+    }
+
+    public void rotateWarps(Player player, int rotateBy) {
+        locations.rotate(player, rotateBy);
+        updateWarpState(player);
     }
 
     public boolean onCommand(Player player, String[] split) {
@@ -23,17 +73,12 @@ public class WarpStackListener extends PluginListener {
                 return true;
             }
 
-            if (locations.pushLocation(player, warp.Location))
-                updateWarpState(player);
-            else
-                player.sendMessage(Colors.Rose + "You are at your maximum for warp slots.");
+            pushWarp(player, warp);
             return true;
         }
 
         if (split[0].equalsIgnoreCase("/sspawn") && player.canUseCommand("/spawn") && player.canUseCommand("/sspawn")) {
-            if (locations.pushLocation(player, etc.getServer().getSpawnLocation()))
-                updateWarpState(player);
-
+            pushWarpSpawn(player);
             return true;
         }
 
@@ -45,15 +90,12 @@ public class WarpStackListener extends PluginListener {
                 home = etc.getDataSource().getHome(player.getName());
             }
 
-            if (home != null) {
-                if (locations.pushLocation(player, home.Location))
-                    updateWarpState(player);
-            } else if (split.length > 1 && player.isAdmin()) {
+            if (home != null)
+                pushWarp(player, home);
+            else if (split.length > 1 && player.isAdmin())
                 player.sendMessage(Colors.Rose + "That player home does not exist");
-            } else {
-                if (locations.pushLocation(player, etc.getServer().getSpawnLocation()))
-                    updateWarpState(player);
-            }
+            else
+                pushWarpSpawn(player);
 
             return true;
         }
@@ -72,9 +114,7 @@ public class WarpStackListener extends PluginListener {
                     return true;
                 }
 
-                if (locations.pushLocation(player, other.getLocation()))
-                    updateWarpState(player);
-
+                pushWarp(player, other);
             } else
                 player.sendMessage(Colors.Rose + "Can't find user " + split[1] + ".");
             return true;
@@ -94,19 +134,31 @@ public class WarpStackListener extends PluginListener {
                     return true;
                 }
 
-                if (locations.pushLocation(other, player.getLocation()))
-                    updateWarpState(other);
-
+                pushWarp(other, player);
             } else
                 player.sendMessage(Colors.Rose + "Can't find user " + split[1] + ".");
             return true;
         }
 
         if (split[0].equalsIgnoreCase("/sback") && player.canUseCommand("/sback")) {
-            if (locations.popLocation(player))
-                updateWarpState(player);
-            else
-                player.sendMessage(Colors.Rose + "No previous warps.");
+            popWarp(player);
+            return true;
+        }
+
+        if (split[0].equalsIgnoreCase("/swlist") && player.canUseCommand("/swlist")) {
+            StringBuffer message = new StringBuffer(Colors.Rose + "Your stack: " + Colors.LightBlue);
+            int size = locations.getSize(player), active = locations.getActive(player);
+            for (int i = 0; i < size; i ++) {
+                if (i == active) {
+                    message.append(Colors.Yellow + locations.getName(player, i));
+                    if (i < size-1) message.append("  " + Colors.LightBlue);
+                } else {
+                    message.append(locations.getName(player, i));
+                    if (i < size-1) message.append("  ");
+                }
+            }
+
+            player.sendMessage(message.toString());
             return true;
         }
 
@@ -118,8 +170,7 @@ public class WarpStackListener extends PluginListener {
                     rotateBy = Integer.parseInt(split[1]);
                 } catch (NumberFormatException e) { }
 
-            locations.rotate(player, rotateBy);
-            updateWarpState(player);
+            rotateWarps(player, rotateBy);
             return true;
         }
 

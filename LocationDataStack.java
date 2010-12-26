@@ -3,13 +3,14 @@ import java.util.ArrayList;
 
 public class LocationDataStack {
 
-    public ArrayList<Location> store;
+    public ArrayList<LocationData> store;
     public int size;
     public int pointer;
 
     public LocationDataStack(Location initialSlot) {
-        store = new ArrayList<Location> (getLimit());
-        store.add(initialSlot);
+        store = new ArrayList<LocationData> (getLimit());
+        store.add(new LocationData(initialSlot, "<start>"));
+        pointer = 0;
         size = 1;
     }
 
@@ -18,11 +19,19 @@ public class LocationDataStack {
     }
 
     public boolean canAddSlot() {
-        return size < getLimit()-1;
+        return size < getLimit();
     }
 
     public Location getLocation() {
-        return store.get(pointer);
+        return store.get(pointer).location;
+    }
+
+    public String getName() {
+        return store.get(pointer).name;
+    }
+
+    public String getName(int index) {
+        return store.get(index).name;
     }
 
     public void setLocation(Location to) {
@@ -31,9 +40,9 @@ public class LocationDataStack {
         loc.rotX = to.rotX; loc.rotY = to.rotY;
     }
 
-    public void addSlot(Location location) {
+    public void addSlot(Location location, String name) {
         if (!canAddSlot()) return;
-        store.add(++pointer, location);
+        store.add(++ pointer, new LocationData(location, name));
         size ++;
     }
 
