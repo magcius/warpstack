@@ -6,12 +6,19 @@ public class LocationDataStack {
     public ArrayList<Location> store;
     public int size;
     public int pointer;
-    public int limit = 32;
 
     public LocationDataStack(Location initialSlot) {
-        store = new ArrayList<Location> (limit);
+        store = new ArrayList<Location> (getLimit());
         store.add(initialSlot);
         size = 1;
+    }
+
+    public int getLimit() {
+        return WarpStack.stack_limit;
+    }
+
+    public boolean canAddSlot() {
+        return size < getLimit()-1;
     }
 
     public Location getLocation() {
@@ -22,10 +29,6 @@ public class LocationDataStack {
         Location loc = getLocation();
         loc.x = to.x; loc.y = to.y; loc.z = to.z;
         loc.rotX = to.rotX; loc.rotY = to.rotY;
-    }
-
-    public boolean canAddSlot() {
-        return size < limit-1;
     }
 
     public void addSlot(Location location) {

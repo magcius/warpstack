@@ -5,6 +5,8 @@ public class WarpStack extends Plugin {
     public String name = "WarpStack";
     public String version = "0.7";
 
+    public static int stack_limit;
+
     private WarpStackListener listener;
 
     public void enable() {
@@ -30,6 +32,9 @@ public class WarpStack extends Plugin {
 
     public void initialize() {
         listener = new WarpStackListener();
+
+        PropertiesFile props = new PropertiesFile("warpstack.properties");
+        stack_limit = props.getInt("limit", 32);
 
         etc.getLoader().addListener(
             PluginLoader.Hook.COMMAND,
