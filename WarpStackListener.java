@@ -30,6 +30,57 @@ public class WarpStackListener extends PluginListener {
             return true;
         }
 
+        if (split[0].equalsIgnoreCase("/sspawn") && player.canUseCommand("/spawn") && player.canUseCommand("/sspawn")) {
+            if (locations.pushLocation(player, etc.getServer().getSpawnLocation()))
+                updateWarpState(player);
+
+            return true;
+        }
+
+        if (split[0].equalsIgnoreCase("/shome") && player.canUseCommand("/home") && player.canUseCommand("/shome")) {
+            Warp home = null;
+            if (split.length > 1 && isAdmin()) {
+                home = etc.getDataSource().getHome(split[1]);
+            } else {
+                home = etc.getDataSource().getHome(getName());
+            }
+
+            if (home != null) {
+                if (locations.pushLocation(player, home.Location))
+                    updateWarpState(player);
+            } else if (split.length > 1 && isAdmin()) {
+                sendMessage(Colors.Rose + "That player home does not exist");
+            } else {
+                if (locations.pushLocation(player, etc.getServer().getSpawnLocation()))
+                    updateWarpState(player);
+            }
+
+            return true;
+        }
+
+        if (split[0].equalsIgnoreCase("/stp") && player.canUseCommand("/tp") && player.canUseCommand("/stp")) {
+            if (split.length < 2) {
+                sendMessage(Colors.Rose + "Correct usage is: /stp [player]");
+                return true;
+            }
+
+            Player other = etc.getServer().matchPlayer(split[1]);
+
+            if (other != null) {
+                if (player.getName().equalsIgnoreCase(other.getName())) {
+                    sendMessage(Colors.Rose + "You're already here!");
+                    return true;
+                }
+
+                log.info(player.getName() + " teleported to " + other.getName());
+                if (locations.pushLocation(player, other.getLocation()))
+                    updateWarpState(player);
+
+            } else
+                sendMessage(Colors.Rose + "Can't find user " + split[1] + ".");
+            return true;
+        }
+
         if (split[0].equalsIgnoreCase("/sback") && player.canUseCommand("/sback")) {
             if (locations.popLocation(player))
                 updateWarpState(player);
