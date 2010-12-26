@@ -89,26 +89,16 @@ public class WarpStackListener extends PluginListener {
         }
 
         if (split[0].equalsIgnoreCase("/smove") && player.canUseCommand("/smove")) {
-            if (split.length < 2) {
-                player.sendMessage(Colors.Rose + "Correct usage is: /smove +N or -N");
-                return true;
-            }
+            int rotateBy = 1;
 
-            String param = split[1];
-            if (param.charAt(0) == '+' || param.charAt(0) == '-') {
+            if (split.length > 1)
                 try {
-                    int rotateBy;
-
-                    if (param.length() == 1) 
-                        rotateBy = 1;
-                    else
-                        rotateBy = Integer.parseInt(param.substring(1));
-
-                    locations.rotate(player, rotateBy);
-                    updateWarpState(player);
-                    return true;
+                    rotateBy = Integer.parseInt(split[1]);
                 } catch (NumberFormatException e) { }
-            }
+
+            locations.rotate(player, rotateBy);
+            updateWarpState(player);
+            return true;
         }
 
         return false;
