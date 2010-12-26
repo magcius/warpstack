@@ -13,8 +13,8 @@ public class WarpStack extends Plugin {
         commands.put("/stp",    commands.get("/tp")    + " [Stack]");
         commands.put("/shome",  commands.get("/home")  + " [Stack]");
         commands.put("/sspawn", commands.get("/spawn") + " [Stack]");
-        commands.put("/sback",  "go back in your warp stack [Stack]");
-        commands.put("/smove",  "move within your warp stack [Stack]");
+        commands.put("/sback",  " - Go back in your warp stack [Stack]");
+        commands.put("/smove",  " - Move within your warp stack [Stack]");
     }
 
     public void disable() {
