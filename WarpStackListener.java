@@ -60,29 +60,45 @@ public class WarpStackListener extends PluginListener {
         updateWarpState(player);
     }
 
+    public boolean hasCommand(Player player, String message, String command) {
+        if (message.equalsIgnoreCase("/s" + command))
+            return player.canUseCommand("/s" + command);
+        return WarpStack.override && message.equalsIgnoreCase("/" + command)
+            && player.canUseCommand("/" + command)
+            && player.canUseCommand("/s" + command);
+    }
+
     public boolean onCommand(Player player, String[] split) {
-        if (split[0].equalsIgnoreCase("/swarp") && player.canUseCommand("/warp") && player.canUseCommand("/swarp")) {
+        String command = split[0];
+        if (hasCommand(player, command, "warp")) {
             if (split.length < 2) {
-                player.sendMessage(Colors.Rose + "Correct usage is: /swarp [warpname]");
+                player.sendMessage(Colors.Rose + "Correct usage is: "+command+" [warpname]");
                 return true;
             }
 
             Warp warp = etc.getDataSource().getWarp(split[1]);
+
+            Player toWarp = player;
+            if (split.length == 3 && player.canIgnoreRestrictions())
+                toWarp = etc.getServer().matchPlayer(split[2]);
+            if (toWarp == null)
+                player.sendMessage(Colors.Rose + "Player not found.");
+
             if (warp == null || (!player.isInGroup(warp.Group) && !warp.Group.equals(""))) {
                 player.sendMessage(Colors.Rose + "Warp not found.");
                 return true;
             }
 
-            pushWarp(player, warp);
+            pushWarp(toWarp, warp);
             return true;
         }
 
-        if (split[0].equalsIgnoreCase("/sspawn") && player.canUseCommand("/spawn") && player.canUseCommand("/sspawn")) {
+        if (hasCommand(player, command, "spawn")) {
             pushWarpSpawn(player);
             return true;
         }
 
-        if (split[0].equalsIgnoreCase("/shome") && player.canUseCommand("/home") && player.canUseCommand("/shome")) {
+        if (hasCommand(player, command, "home")) {
             Warp home = null;
             if (split.length > 1 && player.isAdmin()) {
                 home = etc.getDataSource().getHome(split[1]);
@@ -100,9 +116,9 @@ public class WarpStackListener extends PluginListener {
             return true;
         }
 
-        if (split[0].equalsIgnoreCase("/stp") && player.canUseCommand("/tp") && player.canUseCommand("/stp")) {
+        if (hasCommand(player, command, "tp")) {
             if (split.length < 2) {
-                player.sendMessage(Colors.Rose + "Correct usage is: /stp [player]");
+                player.sendMessage(Colors.Rose + "Correct usage is: "+command+" [player]");
                 return true;
             }
 
@@ -120,9 +136,9 @@ public class WarpStackListener extends PluginListener {
             return true;
         }
 
-        if (split[0].equalsIgnoreCase("/stphere") && player.canUseCommand("/tphere") && player.canUseCommand("/stphere")) {
+        if (hasCommand(player, command, "tphere")) {
             if (split.length < 2) {
-                player.sendMessage(Colors.Rose + "Correct usage is: /stphere [player]");
+                player.sendMessage(Colors.Rose + "Correct usage is: "+command+" [player]");
                 return true;
             }
 
@@ -146,8 +162,8 @@ public class WarpStackListener extends PluginListener {
         }
 
         if (split[0].equalsIgnoreCase("/swlist") && player.canUseCommand("/swlist")) {
-            StringBuffer message = new StringBuffer(Colors.Rose + "Your stack: " + Colors.LightBlue);
-            int size = locations.getSize(player), active = locations.getActive(player);
+            StringBuffer message = new StringBuffer(Colors.Rose + "Your stack: " + Colors.LightBlue); 
+           int size = locations.getSize(player), active = locations.getActive(player);
             for (int i = 0; i < size; i ++) {
                 if (i == active) {
                     message.append(Colors.Yellow + locations.getName(player, i));

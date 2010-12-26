@@ -6,6 +6,7 @@ public class WarpStack extends Plugin {
     public String version = "0.8";
 
     public static int stack_limit;
+    public static boolean override;
 
     private WarpStackListener listener;
 
@@ -38,10 +39,11 @@ public class WarpStack extends Plugin {
 
         PropertiesFile props = new PropertiesFile("warpstack.properties");
         stack_limit = props.getInt("limit", 32);
+        override = props.getBoolean("override", true);
 
         etc.getLoader().addListener(
             PluginLoader.Hook.COMMAND,
             listener, this,
-            PluginListener.Priority.MEDIUM);
+            PluginListener.Priority.HIGH);
     }
 }
