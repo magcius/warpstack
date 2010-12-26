@@ -11,7 +11,7 @@ public class WarpStackListener extends PluginListener {
     }
 
     public boolean onCommand(Player player, String[] split) {
-        if (split[0].equalsIgnoreCase("/swarp") && player.canUseCommand("/swarp")) {
+        if (split[0].equalsIgnoreCase("/swarp") && player.canUseCommand("/warp") && player.canUseCommand("/swarp")) {
             if (split.length < 2) {
                 player.sendMessage(Colors.Rose + "Correct usage is: /swarp [warpname]");
                 return true;
