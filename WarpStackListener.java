@@ -15,8 +15,23 @@ public class WarpStackListener extends PluginListener {
         player.sendMessage(Colors.Rose + "You are at your maximum for warp slots.");
     }
 
+    public Location getSpawn() {
+        PropertiesFile props = new PropertiesFile("server.properties");
+        if (props.keyExists("exact-spawn")) {
+            String[] data = props.getString("exact-spawn").split(",");
+            Location loc = new Location();
+            loc.x = Double.parseDouble(data[0]);
+            loc.y = Double.parseDouble(data[1]);
+            loc.z = Double.parseDouble(data[2]);
+            loc.rotX = Float.parseFloat(data[3]);
+            loc.rotY = Float.parseFloat(data[4]);
+            return loc;
+        }
+        return etc.getServer().getSpawnLocation();
+    }
+
     public boolean pushWarpSpawn(Player player) {
-        if (locations.pushLocation(player, etc.getServer().getSpawnLocation(), "spawn")) {
+        if (locations.pushLocation(player, getSpawn(), "spawn")) {
             updateWarpState(player);
             return true;
         } else {
