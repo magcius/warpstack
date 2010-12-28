@@ -41,7 +41,9 @@ public class WarpStackListener extends PluginListener {
     }
 
     public boolean pushWarp(Player player, Warp warp) {
-        if (locations.pushLocation(player, warp.Location, warp.Name)) {
+        Location loc = new Location(warp.Location.x, warp.Location.y, warp.Location.z,
+                                    warp.Location.rotX, warp.Location.rotY);
+        if (locations.pushLocation(player, loc, warp.Name)) {
             updateWarpState(player);
             return true;
         } else {
