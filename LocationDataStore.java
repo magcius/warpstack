@@ -28,6 +28,11 @@ public class LocationDataStore {
         return get(player).removeSlot();
     }
 
+    public void clear(Player player) {
+        LocationDataStack stack = get(player);
+        stack.clear(player.getLocation());
+    }
+
     public void rotate(Player player, int by) {
         LocationDataStack stack = get(player);
         stack.setLocation(player.getLocation());

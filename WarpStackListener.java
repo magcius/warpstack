@@ -195,6 +195,10 @@ public class WarpStackListener extends PluginListener {
             return true;
         }
 
+        if (split[0].equalsIgnoreCase("/sempty") && player.canUseCommand("/sempty")) {
+            locations.clear(player);
+        }
+
         if (split[0].equalsIgnoreCase("/smove") && player.canUseCommand("/smove")) {
             int rotateBy = 1;
 

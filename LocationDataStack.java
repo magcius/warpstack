@@ -9,9 +9,7 @@ public class LocationDataStack {
 
     public LocationDataStack(Location initialSlot) {
         store = new ArrayList<LocationData> (getLimit());
-        store.add(new LocationData(initialSlot, "<start>"));
-        pointer = 0;
-        size = 1;
+        clear(initialSlot);
     }
 
     public int getLimit() {
@@ -53,6 +51,15 @@ public class LocationDataStack {
         size --;
         if (pointer < 0) pointer = size-1;
         return true;
+    }
+
+    public void clear(Location initialSlot) {
+        if (size <= 1)
+            return;
+        store.clear();
+        store.add(new LocationData(initialSlot, "<start>"));
+        pointer = 0;
+        size = 1;
     }
 
     public void rotate(int by) {
