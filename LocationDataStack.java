@@ -54,8 +54,6 @@ public class LocationDataStack {
     }
 
     public void clear(Location initialSlot) {
-        if (size <= 1)
-            return;
         store.clear();
         store.add(new LocationData(initialSlot, "<start>"));
         pointer = 0;
