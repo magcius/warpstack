@@ -180,7 +180,7 @@ public class WarpStackListener extends PluginListener {
 
         if (split[0].equalsIgnoreCase("/swlist") && player.canUseCommand("/swlist")) {
             StringBuffer message = new StringBuffer(Colors.Rose + "Your stack: " + Colors.LightBlue); 
-           int size = locations.getSize(player), active = locations.getActive(player);
+            int size = locations.getSize(player), active = locations.getActive(player);
             for (int i = 0; i < size; i ++) {
                 if (i == active) {
                     message.append(Colors.Yellow + locations.getName(player, i));
