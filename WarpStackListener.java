@@ -8,11 +8,11 @@ public class WarpStackListener extends PluginListener {
 
     private void updateWarpState(Player player) {
         player.teleportTo(locations.getLocation(player));
-        player.sendMessage(Colors.Rose + "Woosh!");
+        player.sendMessage(Colors.Rose + "Woosh! To undo, use /sback. To see your stack, type /swlist.");
     }
 
     private void noMoreSlots(Player player) {
-        player.sendMessage(Colors.Rose + "You are at your maximum for warp slots.");
+        player.sendMessage(Colors.Rose + "You are at your maximum for warp slots. Use /sempty or /sback.");
     }
 
     public Location getSpawn() {
